@@ -41,8 +41,8 @@ class CreateMeetingSystemIntentHandler(AbstractRequestHandler):
         if not is_request_type("IntentRequest")(handler_input):
             return False
         # check intent name
-        print('CreateMeetingSystemIntentHandler: ' + handler_input.request_envelope.request.intent.name)
-        if is_intent_name("CreateMeetingSystemIntent")(handler_input):
+        print('CreateMeetingSystemIntentHandler - intent name: ' + handler_input.request_envelope.request.intent.name)
+        if not is_intent_name("CreateMeetingSystemIntent")(handler_input):
             return False
 
         print('CreateMeetingSystemIntent matched')
