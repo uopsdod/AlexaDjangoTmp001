@@ -18,11 +18,13 @@ import json
 class LaunchRequestHandler(AbstractRequestHandler):
     def can_handle(self, handler_input):
         # type: (HandlerInput) -> bool
-        print('LaunchRequestHandler:' + handler_input.request_envelope.request.object_type)
-        is_match = is_request_type("LaunchRequest")(handler_input)
-        if is_match:
-            print('LaunchRequestHandler matched')
-        return is_match
+        # check request type
+        print('LaunchRequestHandler - request type:' + handler_input.request_envelope.request.object_type)
+        if not is_request_type("LaunchRequest")(handler_input):
+            return False
+
+        print('LaunchRequestHandler matched')
+        return True
 
     def handle(self, handler_input):
         # type: (HandlerInput) -> Response
@@ -34,11 +36,17 @@ class CreateMeetingSystemIntentHandler(AbstractRequestHandler):
 
     def can_handle(self, handler_input):
         # type: (HandlerInput) -> bool
-        print('CreateMeetingSystemIntentHandler: ' + handler_input.request_envelope.request.object_type)
-        is_match = is_request_type("CreateMeetingSystemIntent")(handler_input)
-        if is_match:
-            print('CreateMeetingSystemIntent matched')
-        return is_match
+        # check request type
+        print('CreateMeetingSystemIntentHandler - request type: ' + handler_input.request_envelope.request.object_type)
+        if not is_request_type("IntentRequest")(handler_input):
+            return False
+        # check intent name
+        print('CreateMeetingSystemIntentHandler: ' + handler_input.request_envelope.request.intent.name)
+        if is_intent_name("CreateMeetingSystemIntent")(handler_input):
+            return False
+
+        print('CreateMeetingSystemIntent matched')
+        return True
 
     def handle(self, handler_input):
         day_of_week = "Monady"
