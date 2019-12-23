@@ -131,7 +131,7 @@ class AllExceptionHandler(AbstractExceptionHandler):
 
 # register request handlers
 sb.add_request_handler(LaunchRequestHandler())
-sb.add_request_handler(HelloWorldIntentHandler())
+# sb.add_request_handler(HelloWorldIntentHandler())
 sb.add_request_handler(HelpIntentHandler())
 sb.add_request_handler(CancelAndStopIntentHandler())
 sb.add_request_handler(SessionEndedRequestHandler())
