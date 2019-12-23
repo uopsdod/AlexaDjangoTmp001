@@ -10,7 +10,6 @@ from ask_sdk_model.ui import SimpleCard
 
 import json
 
-#TODO: CreateMeetingSystemIntent - create intent "CreateMeetingSystemIntent"
 #TODO: SessionEndedRequest - create intent for SessionEndedRequest
 #TODO: CreateMeetingSystemIntentHandler - create slot to get Monday - Sunday
 #TODO: CreateMeetingSystemIntentHandler - use slot to get Monday - Sunday
@@ -49,28 +48,26 @@ class CreateMeetingSystemIntentHandler(AbstractRequestHandler):
         return True
 
     def handle(self, handler_input):
-        day_of_week = "Monday"
-        speech_text = "OK, I have booked " + day_of_week + " for you."
-
-        handler_input.response_builder.speak(speech_text).set_should_end_session(True)
+        speech_text = "OK, I have created a new meeting system for you."
+        ask_text = "Do you want to book a meeting by day?"
+        handler_input.response_builder.speak(speech_text).set_should_end_session(False).ask(ask_text)
         return handler_input.response_builder.response
 
 
-class HelloWorldIntentHandler(AbstractRequestHandler):
-    def can_handle(self, handler_input):
-        # type: (HandlerInput) -> bool
-        print('hey005')
-        return is_intent_name("HelloWorldIntent")(handler_input)
-
-    def handle(self, handler_input):
-        # type: (HandlerInput) -> Response
-        speech_text = "Hello World"
-
-        handler_input.response_builder.speak(speech_text).set_card(
-            SimpleCard("Hello World", speech_text)).set_should_end_session(
-            True)
-        return handler_input.response_builder.response
-
+# class HelloWorldIntentHandler(AbstractRequestHandler):
+#     def can_handle(self, handler_input):
+#         # type: (HandlerInput) -> bool
+#         print('hey005')
+#         return is_intent_name("HelloWorldIntent")(handler_input)
+#
+#     def handle(self, handler_input):
+#         # type: (HandlerInput) -> Response
+#         speech_text = "Hello World"
+#
+#         handler_input.response_builder.speak(speech_text).set_card(
+#             SimpleCard("Hello World", speech_text)).set_should_end_session(
+#             True)
+#         return handler_input.response_builder.response
 
 class HelpIntentHandler(AbstractRequestHandler):
     def can_handle(self, handler_input):
@@ -85,7 +82,6 @@ class HelpIntentHandler(AbstractRequestHandler):
         handler_input.response_builder.speak(speech_text).ask(speech_text).set_card(
             SimpleCard("Hello World", speech_text))
         return handler_input.response_builder.response
-
 
 class CancelAndStopIntentHandler(AbstractRequestHandler):
     def can_handle(self, handler_input):
@@ -102,7 +98,6 @@ class CancelAndStopIntentHandler(AbstractRequestHandler):
             SimpleCard("Hello World", speech_text)).set_should_end_session(True)
         return handler_input.response_builder.response
 
-
 class SessionEndedRequestHandler(AbstractRequestHandler):
     def can_handle(self, handler_input):
         # type: (HandlerInput) -> bool
@@ -114,7 +109,6 @@ class SessionEndedRequestHandler(AbstractRequestHandler):
         # any cleanup logic goes here
 
         return handler_input.response_builder.response
-
 
 from ask_sdk_core.dispatch_components import AbstractExceptionHandler
 
