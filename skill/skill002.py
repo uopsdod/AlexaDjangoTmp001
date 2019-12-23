@@ -9,10 +9,8 @@ from ask_sdk_model import Response
 from ask_sdk_model.ui import SimpleCard
 
 import json
-
-#TODO: SessionEndedRequest - create intent for SessionEndedRequest
-#TODO: CreateMeetingSystemIntentHandler - create slot to get Monday - Sunday
-#TODO: CreateMeetingSystemIntentHandler - use slot to get Monday - Sunday
+#TODO: BookMeetingIntentHandler - create slot to get Monday - Sunday
+#TODO: BookMeetingIntentHandler - use slot to get Monday - Sunday
 
 class LaunchRequestHandler(AbstractRequestHandler):
     def can_handle(self, handler_input):
@@ -49,8 +47,31 @@ class CreateMeetingSystemIntentHandler(AbstractRequestHandler):
 
     def handle(self, handler_input):
         speech_text = "OK, I have created a new meeting system for you."
-        ask_text = "Do you want to book a meeting by day?"
-        handler_input.response_builder.speak(speech_text).set_should_end_session(False).ask(ask_text)
+        speech_text += "Do you want to book a meeting by day?"
+        handler_input.response_builder.speak(speech_text).set_should_end_session(False)
+        return handler_input.response_builder.response
+
+
+class BookMeetingIntentHandler(AbstractRequestHandler):
+
+    def can_handle(self, handler_input):
+        # check request type
+        print('BookMeetingIntentHandler - request type: ' + handler_input.request_envelope.request.object_type)
+        if not is_request_type("IntentRequest")(handler_input):
+            return False
+        # check intent name
+        print('BookMeetingIntentHandler - intent name: ' + handler_input.request_envelope.request.intent.name)
+        if not is_intent_name("BookMeetingIntent")(handler_input):
+            return False
+
+        print('BookMeetingIntentHandler matched')
+        return True
+
+    def handle(self, handler_input):
+        dayOfWeek = "Monday"
+        speech_text = "OK, I have booked " + dayOfWeek + " for you."
+        speech_text += "Thank you for using the meeting system. Bye."
+        handler_input.response_builder.speak(speech_text).set_should_end_session(True)
         return handler_input.response_builder.response
 
 
@@ -138,6 +159,7 @@ sb.add_request_handler(SessionEndedRequestHandler())
 
 # register intent handlers
 sb.add_request_handler(CreateMeetingSystemIntentHandler())
+sb.add_request_handler(BookMeetingIntentHandler())
 
 # register exception handlers
 sb.add_exception_handler(AllExceptionHandler())
