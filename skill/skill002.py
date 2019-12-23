@@ -19,7 +19,8 @@ class LaunchRequestHandler(AbstractRequestHandler):
     def can_handle(self, handler_input):
         # type: (HandlerInput) -> bool
         print('LaunchRequestHandler: ')
-        json.dumps(vars(handler_input), sort_keys=False, indent=4)
+        # json.dumps(vars(handler_input), sort_keys=False, indent=4)
+        json.dumps(handler_input.__dict__)
         is_match = is_request_type("LaunchRequest")(handler_input)
         if is_match:
             print('LaunchRequestHandler matched')
@@ -36,7 +37,8 @@ class CreateMeetingSystemIntentHandler(AbstractRequestHandler):
     def can_handle(self, handler_input):
         # type: (HandlerInput) -> bool
         print('CreateMeetingSystemIntentHandler: ')
-        json.dumps(vars(handler_input), sort_keys=False, indent=4)
+        # json.dumps(vars(handler_input), sort_keys=False, indent=4)
+        json.dumps(handler_input.__dict__)
         is_match = is_request_type("CreateMeetingSystemIntent")(handler_input)
         if is_match:
             print('CreateMeetingSystemIntent matched')
