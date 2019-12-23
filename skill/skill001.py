@@ -113,6 +113,6 @@ sb.add_request_handler(HelloWorldIntentHandler())
 sb.add_request_handler(HelpIntentHandler())
 sb.add_request_handler(CancelAndStopIntentHandler())
 sb.add_request_handler(SessionEndedRequestHandler())
-sb.add_request_handler(AllExceptionHandler())
+sb.add_exception_handler(AllExceptionHandler())
 
 myskill001 = sb.create()
