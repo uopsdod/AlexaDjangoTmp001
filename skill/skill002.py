@@ -49,7 +49,7 @@ class CreateMeetingSystemIntentHandler(AbstractRequestHandler):
         return True
 
     def handle(self, handler_input):
-        day_of_week = "Monady"
+        day_of_week = "Monday"
         speech_text = "OK, I have booked " + day_of_week + " for you."
 
         handler_input.response_builder.speak(speech_text).set_should_end_session(True)
