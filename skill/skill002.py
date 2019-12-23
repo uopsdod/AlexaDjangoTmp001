@@ -46,7 +46,7 @@ class CreateMeetingSystemIntentHandler(AbstractRequestHandler):
         return True
 
     def handle(self, handler_input):
-        speech_text = "OK, I have created a new meeting system for you."
+        speech_text = "OK, I have created a new meeting system for you. "
         speech_text += "Do you want to book a meeting by day?"
         handler_input.response_builder.speak(speech_text).set_should_end_session(False)
         return handler_input.response_builder.response
@@ -69,7 +69,7 @@ class BookMeetingIntentHandler(AbstractRequestHandler):
 
     def handle(self, handler_input):
         dayOfWeek = "Monday"
-        speech_text = "OK, I have booked " + dayOfWeek + " for you."
+        speech_text = "OK, I have booked " + dayOfWeek + " for you. "
         speech_text += "Thank you for using the meeting system. Bye."
         handler_input.response_builder.speak(speech_text).set_should_end_session(True)
         return handler_input.response_builder.response
