@@ -8,6 +8,8 @@ from ask_sdk_core.handler_input import HandlerInput
 from ask_sdk_model import Response
 from ask_sdk_model.ui import SimpleCard
 
+import json
+
 #TODO: CreateMeetingSystemIntent - create intent "CreateMeetingSystemIntent"
 #TODO: SessionEndedRequest - create intent for SessionEndedRequest
 #TODO: CreateMeetingSystemIntentHandler - create slot to get Monday - Sunday
@@ -16,6 +18,8 @@ from ask_sdk_model.ui import SimpleCard
 class LaunchRequestHandler(AbstractRequestHandler):
     def can_handle(self, handler_input):
         # type: (HandlerInput) -> bool
+        print('LaunchRequestHandler: ')
+        json.dumps(vars(handler_input), sort_keys=False, indent=4)
         is_match = is_request_type("LaunchRequest")(handler_input)
         if is_match:
             print('LaunchRequestHandler matched')
@@ -30,6 +34,9 @@ class LaunchRequestHandler(AbstractRequestHandler):
 class CreateMeetingSystemIntentHandler(AbstractRequestHandler):
 
     def can_handle(self, handler_input):
+        # type: (HandlerInput) -> bool
+        print('CreateMeetingSystemIntentHandler: ')
+        json.dumps(vars(handler_input), sort_keys=False, indent=4)
         is_match = is_request_type("CreateMeetingSystemIntent")(handler_input)
         if is_match:
             print('CreateMeetingSystemIntent matched')
