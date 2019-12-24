@@ -14,6 +14,9 @@ from .utils.common_util import UserStates
 from .helpers import LaunchRequestHelper
 from .helpers import CreateMeetingSystemIntentHelper
 from .helpers import BookMeetingIntentHelper
+from .helpers import CancelIntentHelper
+from .helpers import StopIntentHelper
+from .helpers import SessionEndedRequestHelper
 
 #TODO: BookMeetingIntentHandler - create slot to get Monday - Sunday
 #TODO: BookMeetingIntentHandler - use slot to get Monday - Sunday
@@ -43,7 +46,12 @@ class EntryHandler(AbstractRequestHandler):
                     response_result = CreateMeetingSystemIntentHelper.execute(handler_input)
                 if is_intent_name(BookMeetingIntentHelper.INTENT_NAME)(handler_input):
                     response_result = BookMeetingIntentHelper.execute(handler_input)
-
+                if is_intent_name("AMAZON.CancelIntent")(handler_input):
+                    response_result = CancelIntentHelper.execute(handler_input)
+                if is_intent_name("AMAZON.StopIntent")(handler_input):
+                    response_result = StopIntentHelper.execute(handler_input)
+        if is_request_type("SessionEndedRequest")(handler_input):
+            response_result = SessionEndedRequestHelper.execute(handler_input)
         return response_result
 
 # General
@@ -61,32 +69,32 @@ def is_sesssion_correct(handler_input):
 
 
 
-class CancelAndStopIntentHandler(AbstractRequestHandler):
-    def can_handle(self, handler_input):
-        # type: (HandlerInput) -> bool
-        print('hey005')
-        return is_intent_name("AMAZON.CancelIntent")(handler_input) or is_intent_name("AMAZON.StopIntent")(
-            handler_input)
+# class CancelAndStopIntentHandler(AbstractRequestHandler):
+#     def can_handle(self, handler_input):
+#         # type: (HandlerInput) -> bool
+#         print('hey005')
+#         return is_intent_name("AMAZON.CancelIntent")(handler_input) or is_intent_name("AMAZON.StopIntent")(
+#             handler_input)
+#
+#     def handle(self, handler_input):
+#         # type: (HandlerInput) -> Response
+#         speech_text = "Goodbye!"
+#
+#         handler_input.response_builder.speak(speech_text).set_card(
+#             SimpleCard("Hello World", speech_text)).set_should_end_session(True)
+#         return handler_input.response_builder.response
 
-    def handle(self, handler_input):
-        # type: (HandlerInput) -> Response
-        speech_text = "Goodbye!"
-
-        handler_input.response_builder.speak(speech_text).set_card(
-            SimpleCard("Hello World", speech_text)).set_should_end_session(True)
-        return handler_input.response_builder.response
-
-class SessionEndedRequestHandler(AbstractRequestHandler):
-    def can_handle(self, handler_input):
-        # type: (HandlerInput) -> bool
-        print('hey005')
-        return is_request_type("SessionEndedRequest")(handler_input)
-
-    def handle(self, handler_input):
-        # type: (HandlerInput) -> Response
-        # any cleanup logic goes here
-
-        return handler_input.response_builder.response
+# class SessionEndedRequestHandler(AbstractRequestHandler):
+#     def can_handle(self, handler_input):
+#         # type: (HandlerInput) -> bool
+#         print('hey005')
+#         return is_request_type("SessionEndedRequest")(handler_input)
+#
+#     def handle(self, handler_input):
+#         # type: (HandlerInput) -> Response
+#         # any cleanup logic goes here
+#
+#         return handler_input.response_builder.response
 
 from ask_sdk_core.dispatch_components import AbstractExceptionHandler
 
