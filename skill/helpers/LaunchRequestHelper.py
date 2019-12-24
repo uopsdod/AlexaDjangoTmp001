@@ -12,5 +12,5 @@ def execute(handler_input):
     session_attr["user_states"] = json.dumps(user_states)
     print(TAG + ' - user_states:' + session_attr["user_states"])
     # build response
-    speech_text = "Version one, do you want to create a new meeting system or use an existing one?"
+    speech_text = "Version two, do you want to create a new meeting system or use an existing one?"
     return handler_input.response_builder.speak(speech_text).set_should_end_session(False).response
