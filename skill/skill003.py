@@ -25,7 +25,7 @@ class EntryHandler(AbstractRequestHandler):
         return True
 
     def handle(self, handler_input):
-        response_result = handler_input.response_builder.speak("no handler found").set_should_end_session(True).response
+        response_result = handler_input.response_builder.speak("no handler found").set_should_end_session(False).response
         # retrieve common attributes
         request_type = handler_input.request_envelope.request.object_type
         print(EntryHandler.TAG + ' - request type: ' + request_type)
