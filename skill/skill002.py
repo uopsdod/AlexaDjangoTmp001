@@ -40,6 +40,8 @@ class LaunchRequestHandler(AbstractRequestHandler):
         user_states.append(UserStates.INIT.name)
         session_attr["user_states"] = json.dumps(user_states)
         print(LaunchRequestHandler.TAG + ' - session_attr["user_states"]:' + session_attr["user_states"])
+        user_states_2 = json.loads(session_attr["user_states"])
+        print(LaunchRequestHandler.TAG + ' - len(user_states_2):' + len(user_states_2))
 
         speech_text = "Version one, do you want to create a new meeting system or use an existing one?"
         handler_input.response_builder.speak(speech_text).set_should_end_session(False)
