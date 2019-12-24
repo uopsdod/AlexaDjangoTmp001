@@ -65,6 +65,7 @@ class CreateMeetingSystemIntentHandler(AbstractRequestHandler):
             return False
         # store session data
         user_states.append(UserStates.USING_MEETING_SYSTEM.name)
+        session_attr["user_states"] = json.dumps(user_states)
 
         print(CreateMeetingSystemIntentHandler.TAG + ' matched')
         return True
