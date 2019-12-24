@@ -9,7 +9,7 @@ import json
 
 from .helpers import LaunchRequestHelper
 from .helpers import CreateMeetingSystemIntentHelper
-from .helpers.BookMeetingIntentHelper import BookMeetingIntentHelper
+from .helpers import BookMeetingIntentHelper
 from .helpers import CancelIntentHelper
 from .helpers import StopIntentHelper
 from .helpers import SessionEndedRequestHelper
@@ -39,7 +39,7 @@ class EntryHandler(AbstractRequestHandler):
                 if intent_name == CreateMeetingSystemIntentHelper.INTENT_NAME:
                     response_result = CreateMeetingSystemIntentHelper.execute(handler_input)
                 if intent_name == BookMeetingIntentHelper.INTENT_NAME:
-                    response_result = BookMeetingIntentHelper().execute(handler_input)
+                    response_result = BookMeetingIntentHelper.execute(handler_input)
                 if intent_name == "AMAZON.CancelIntent":
                     response_result = CancelIntentHelper.execute(handler_input)
                 if intent_name == "AMAZON.StopIntent":
