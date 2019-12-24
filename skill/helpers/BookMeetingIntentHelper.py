@@ -4,7 +4,7 @@ from ..utils.common_util import UserStates
 # BookMeetingIntent
 TAG = 'BookMeetingIntent'
 INTENT_NAME = 'BookMeetingIntent'
-def execute(self, handler_input):
+def execute(handler_input):
     # type: (HandlerInput) -> Response
     # retrive slot values
     slots = handler_input.request_envelope.request.intent.slots
