@@ -36,7 +36,9 @@ class EntryHandler(AbstractRequestHandler):
         if is_request_type("IntentRequest")(handler_input):
             intent_name = handler_input.request_envelope.request.intent.name
             print(EntryHandler.TAG + ' - intent name: ' + intent_name)
+            # check session
             if is_sesssion_correct(handler_input):
+                # check intent name
                 if is_intent_name(CreateMeetingSystemIntentHelper.INTENT_NAME)(handler_input):
                     response_result = CreateMeetingSystemIntentHelper.execute(handler_input)
                 if is_intent_name(BookMeetingIntentHelper.INTENT_NAME)(handler_input):
@@ -44,7 +46,7 @@ class EntryHandler(AbstractRequestHandler):
 
         return response_result
 
-# General # TODO: refactor this
+# General
 def is_sesssion_correct(handler_input):
     # check session state
     session_attr = handler_input.attributes_manager.session_attributes
