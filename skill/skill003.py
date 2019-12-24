@@ -25,7 +25,7 @@ class EntryHandler(AbstractRequestHandler):
         return True
 
     def handle(self, handler_input):
-        response_result = handler_input.response_builder.speak("no handler found").set_should_end_session(True)
+        response_result = handler_input.response_builder.speak("no handler found").set_should_end_session(True).response
         # retrieve common attributes
         request_type = handler_input.request_envelope.request.object_type
         print(EntryHandler.TAG + ' - request type: ' + request_type)
@@ -35,9 +35,12 @@ class EntryHandler(AbstractRequestHandler):
         if is_request_type("IntentRequest")(handler_input):
             intent_name = handler_input.request_envelope.request.intent.name
             print(EntryHandler.TAG + ' - intent name: ' + intent_name)
-            if is_intent_name(CreateMeetingSystemIntent_INTENT_NAME)(handler_input):
-                if is_sesssion_correct(self, handler_input):
+            if is_sesssion_correct(self, handler_input):
+                if is_intent_name(CreateMeetingSystemIntent_INTENT_NAME)(handler_input):
                     response_result = doCreateMeetingSystemIntentAction(self, handler_input)
+                if is_intent_name(BookMeetingIntent_INTENT_NAME)(handler_input):
+                    response_result = doBookMeetingIntentAction(self, handler_input)
+
         return response_result
 
 # General
@@ -83,6 +86,22 @@ def doCreateMeetingSystemIntentAction(self, handler_input):
     speech_text += "Do you want to book a meeting by day?"
     return handler_input.response_builder.speak(speech_text).set_should_end_session(False).response
 
+# BookMeetingIntent
+BookMeetingIntent_TAG = 'BookMeetingIntent'
+BookMeetingIntent_INTENT_NAME = 'BookMeetingIntent'
+def doBookMeetingIntentAction(self, handler_input):
+    # type: (HandlerInput) -> Response
+    # retrive slot values
+    slots = handler_input.request_envelope.request.intent.slots
+    slot_day_of_week = slots['DayOfWeek'].value
+    slot_task = slots['Task'].value
+    print(BookMeetingIntentHandler.TAG + ' - slot_day_of_week: ' + slot_day_of_week)
+    print(BookMeetingIntentHandler.TAG + ' - slot_task: ' + slot_task)
+
+    speech_text = "OK, I have booked " + slot_day_of_week + " for " + slot_task + ". "
+    speech_text += "Thank you for using the meeting system. Bye."
+    handler_input.response_builder.speak(speech_text).set_should_end_session(True)
+    return handler_input.response_builder.response
 
 # class LaunchRequestHandler(AbstractRequestHandler):
 #     TAG = 'LaunchRequestHandler'
