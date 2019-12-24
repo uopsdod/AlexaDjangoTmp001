@@ -18,8 +18,6 @@ from .helpers import CancelIntentHelper
 from .helpers import StopIntentHelper
 from .helpers import SessionEndedRequestHelper
 
-#TODO: BookMeetingIntentHandler - create slot to get Monday - Sunday
-#TODO: BookMeetingIntentHandler - use slot to get Monday - Sunday
 
 class EntryHandler(AbstractRequestHandler):
     TAG = 'EntryHandler'
@@ -67,68 +65,7 @@ def is_sesssion_correct(handler_input):
         return False
     return True
 
-
-
-# class CancelAndStopIntentHandler(AbstractRequestHandler):
-#     def can_handle(self, handler_input):
-#         # type: (HandlerInput) -> bool
-#         print('hey005')
-#         return is_intent_name("AMAZON.CancelIntent")(handler_input) or is_intent_name("AMAZON.StopIntent")(
-#             handler_input)
-#
-#     def handle(self, handler_input):
-#         # type: (HandlerInput) -> Response
-#         speech_text = "Goodbye!"
-#
-#         handler_input.response_builder.speak(speech_text).set_card(
-#             SimpleCard("Hello World", speech_text)).set_should_end_session(True)
-#         return handler_input.response_builder.response
-
-# class SessionEndedRequestHandler(AbstractRequestHandler):
-#     def can_handle(self, handler_input):
-#         # type: (HandlerInput) -> bool
-#         print('hey005')
-#         return is_request_type("SessionEndedRequest")(handler_input)
-#
-#     def handle(self, handler_input):
-#         # type: (HandlerInput) -> Response
-#         # any cleanup logic goes here
-#
-#         return handler_input.response_builder.response
-
-from ask_sdk_core.dispatch_components import AbstractExceptionHandler
-
-class AllExceptionHandler(AbstractExceptionHandler):
-
-    def can_handle(self, handler_input, exception):
-        # type: (HandlerInput, Exception) -> bool
-        print('hey005')
-        return True
-
-    def handle(self, handler_input, exception):
-        # type: (HandlerInput, Exception) -> Response
-        # Log the exception in CloudWatch Logs
-        print(exception)
-
-        speech = "Sorry, I didn't get it. Can you please say it again!!"
-        handler_input.response_builder.speak(speech).ask(speech)
-        return handler_input.response_builder.response
-
 # register entry handler
 sb.add_request_handler(EntryHandler())
-
-# register request handlers
-# sb.add_request_handler(LaunchRequestHandler())
-# sb.add_request_handler(HelloWorldIntentHandler())
-# sb.add_request_handler(HelpIntentHandler())
-# sb.add_request_handler(CancelAndStopIntentHandler())
-# sb.add_request_handler(SessionEndedRequestHandler())
-
-# register intent handlers
-# sb.add_request_handler(CreateMeetingSystemIntentHandler())
-# sb.add_request_handler(BookMeetingIntentHandler())
-
-# register exception handlers
-# sb.add_exception_handler(AllExceptionHandler())
 
 myskill003 = sb.create()
