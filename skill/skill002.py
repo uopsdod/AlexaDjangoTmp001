@@ -53,23 +53,30 @@ class CreateMeetingSystemIntentHandler(AbstractRequestHandler):
 
 
 class BookMeetingIntentHandler(AbstractRequestHandler):
-
+    TAG = 'BookMeetingIntentHandler'
     def can_handle(self, handler_input):
         # check request type
-        print('BookMeetingIntentHandler - request type: ' + handler_input.request_envelope.request.object_type)
+        print(BookMeetingIntentHandler.TAG + ' - request type: ' + handler_input.request_envelope.request.object_type)
         if not is_request_type("IntentRequest")(handler_input):
             return False
         # check intent name
-        print('BookMeetingIntentHandler - intent name: ' + handler_input.request_envelope.request.intent.name)
+        print(BookMeetingIntentHandler.TAG + ' - intent name: ' + handler_input.request_envelope.request.intent.name)
         if not is_intent_name("BookMeetingIntent")(handler_input):
             return False
 
-        print('BookMeetingIntentHandler matched')
+
+        print(BookMeetingIntentHandler.TAG + ' matched')
         return True
 
     def handle(self, handler_input):
-        dayOfWeek = "Monday"
-        speech_text = "OK, I have booked " + dayOfWeek + " for you. "
+        # retrive slot values
+        slots = handler_input.request_envelope.request.intent.slots
+        slot_day_of_week = slots['DayOfWeek'].value
+        slot_task = slots['Task'].value
+        print(BookMeetingIntentHandler.TAG + ' - slot_day_of_week: ' + slot_day_of_week)
+        print(BookMeetingIntentHandler.TAG + ' - slot_task: ' + slot_task)
+
+        speech_text = "OK, I have booked " + slot_day_of_week + " for " + slot_task + ". "
         speech_text += "Thank you for using the meeting system. Bye."
         handler_input.response_builder.speak(speech_text).set_should_end_session(True)
         return handler_input.response_builder.response
