@@ -79,10 +79,10 @@ def doCreateMeetingSystemIntentAction(self, handler_input):
     user_states.append(UserStates.USING_MEETING_SYSTEM.name)
     session_attr["user_states"] = json.dumps(user_states)
     print(CreateMeetingSystemIntent_TAG + ' - user_states:' + session_attr["user_states"])
-
-    speech_text = "Version one, do you want to create a new meeting system or use an existing one?"
-    handler_input.response_builder.speak(speech_text).set_should_end_session(False)
-    return handler_input.response_builder.response
+    # build response
+    speech_text = "OK, I have created a new meeting system for you. "
+    speech_text += "Do you want to book a meeting by day?"
+    return handler_input.response_builder.speak(speech_text).set_should_end_session(False)
 
 
 # class LaunchRequestHandler(AbstractRequestHandler):
