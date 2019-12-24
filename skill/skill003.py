@@ -12,6 +12,8 @@ import json
 
 from .utils.common_util import UserStates
 from .helpers import LaunchRequestHelper
+from .helpers import CreateMeetingSystemIntentHelper
+from .helpers import BookMeetingIntentHelper
 
 #TODO: BookMeetingIntentHandler - create slot to get Monday - Sunday
 #TODO: BookMeetingIntentHandler - use slot to get Monday - Sunday
@@ -23,7 +25,8 @@ class EntryHandler(AbstractRequestHandler):
         return True
 
     def handle(self, handler_input):
-        response_result = handler_input.response_builder.speak("no handler found").set_should_end_session(False).response
+        # build default response
+        response_result = handler_input.response_builder.speak("I don't understand that. ").set_should_end_session(False).response
         # retrieve common attributes
         request_type = handler_input.request_envelope.request.object_type
         print(EntryHandler.TAG + ' - request type: ' + request_type)
@@ -33,60 +36,28 @@ class EntryHandler(AbstractRequestHandler):
         if is_request_type("IntentRequest")(handler_input):
             intent_name = handler_input.request_envelope.request.intent.name
             print(EntryHandler.TAG + ' - intent name: ' + intent_name)
-            if is_sesssion_correct(self, handler_input):
-                if is_intent_name(CreateMeetingSystemIntent_INTENT_NAME)(handler_input):
-                    response_result = doCreateMeetingSystemIntentAction(self, handler_input)
-                if is_intent_name(BookMeetingIntent_INTENT_NAME)(handler_input):
-                    response_result = doBookMeetingIntentAction(self, handler_input)
+            if is_sesssion_correct(handler_input):
+                if is_intent_name(CreateMeetingSystemIntentHelper.INTENT_NAME)(handler_input):
+                    response_result = CreateMeetingSystemIntentHelper.execute(handler_input)
+                if is_intent_name(BookMeetingIntentHelper.INTENT_NAME)(handler_input):
+                    response_result = BookMeetingIntentHelper.execute(handler_input)
 
         return response_result
 
 # General # TODO: refactor this
-def is_sesssion_correct(self, handler_input):
+def is_sesssion_correct(handler_input):
     # check session state
     session_attr = handler_input.attributes_manager.session_attributes
     user_states = json.loads(session_attr["user_states"])
     print('is_sesssion_correct' + ' - session_attr["user_states"]: ' + session_attr[
         "user_states"])
-    if is_intent_name(CreateMeetingSystemIntent_INTENT_NAME)(handler_input) \
+    if is_intent_name(CreateMeetingSystemIntentHelper.INTENT_NAME)(handler_input) \
             and UserStates.USING_MEETING_SYSTEM.name in user_states:
-        print(CreateMeetingSystemIntent_TAG + ' - meeting system exists already')
+        print(CreateMeetingSystemIntentHelper.TAG + ' - meeting system exists already')
         return False
     return True
 
 
-# CreateMeetingSystemIntent
-CreateMeetingSystemIntent_TAG = 'CreateMeetingSystemIntent'
-CreateMeetingSystemIntent_INTENT_NAME = 'CreateMeetingSystemIntent'
-def doCreateMeetingSystemIntentAction(self, handler_input):
-    # type: (HandlerInput) -> Response
-    # store session data
-    session_attr = handler_input.attributes_manager.session_attributes
-    user_states = json.loads(session_attr["user_states"])
-    user_states.append(UserStates.USING_MEETING_SYSTEM.name)
-    session_attr["user_states"] = json.dumps(user_states)
-    print(CreateMeetingSystemIntent_TAG + ' - user_states:' + session_attr["user_states"])
-    # build response
-    speech_text = "OK, I have created a new meeting system for you. "
-    speech_text += "Do you want to book a meeting by day?"
-    return handler_input.response_builder.speak(speech_text).set_should_end_session(False).response
-
-# BookMeetingIntent
-BookMeetingIntent_TAG = 'BookMeetingIntent'
-BookMeetingIntent_INTENT_NAME = 'BookMeetingIntent'
-def doBookMeetingIntentAction(self, handler_input):
-    # type: (HandlerInput) -> Response
-    # retrive slot values
-    slots = handler_input.request_envelope.request.intent.slots
-    slot_day_of_week = slots['DayOfWeek'].value
-    slot_task = slots['Task'].value
-    print(BookMeetingIntent_TAG + ' - slot_day_of_week: ' + slot_day_of_week)
-    print(BookMeetingIntent_TAG + ' - slot_task: ' + slot_task)
-
-    speech_text = "OK, I have booked " + slot_day_of_week + " for " + slot_task + ". "
-    speech_text += "Thank you for using the meeting system. Bye."
-    handler_input.response_builder.speak(speech_text).set_should_end_session(True)
-    return handler_input.response_builder.response
 
 class CancelAndStopIntentHandler(AbstractRequestHandler):
     def can_handle(self, handler_input):
