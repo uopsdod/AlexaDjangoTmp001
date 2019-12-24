@@ -9,8 +9,8 @@ from ask_sdk_model import Response
 from ask_sdk_model.ui import SimpleCard
 
 import enum
-
 import json
+
 #TODO: BookMeetingIntentHandler - create slot to get Monday - Sunday
 #TODO: BookMeetingIntentHandler - use slot to get Monday - Sunday
 
@@ -34,8 +34,10 @@ class LaunchRequestHandler(AbstractRequestHandler):
         # type: (HandlerInput) -> Response
         # update session state
         session_attr = handler_input.attributes_manager.session_attributes
-        session_attr["state"] = UserStates.INIT.name
-        print(LaunchRequestHandler.TAG + ' - session_attr["state"]:' + session_attr["state"])
+        session_attr["user_state"] = UserStates.INIT.name
+        print(LaunchRequestHandler.TAG + ' - session_attr["user_state"]:' + session_attr["user_state"])
+        session_attr["user_states"] = json.dump([].append(UserStates.INIT.name))
+        print(LaunchRequestHandler.TAG + ' - session_attr["user_states"]:' + session_attr["user_states"])
 
         speech_text = "Version one, do you want to create a new meeting system or use an existing one?"
         handler_input.response_builder.speak(speech_text).set_should_end_session(False)
@@ -56,12 +58,12 @@ class CreateMeetingSystemIntentHandler(AbstractRequestHandler):
             return False
         # check session state
         session_attr = handler_input.attributes_manager.session_attributes
-        print(CreateMeetingSystemIntentHandler.TAG + ' - session_attr["state"]: ' + session_attr["state"])
-        if session_attr["state"] == UserStates.USING_MEETING_SYSTEM.name: # TODO: change this to list
+        print(CreateMeetingSystemIntentHandler.TAG + ' - session_attr["user_state"]: ' + session_attr["user_state"])
+        if session_attr["user_state"] == UserStates.USING_MEETING_SYSTEM.name: # TODO: change this to list
             print(CreateMeetingSystemIntentHandler.TAG + ' - meeting system exists already')
             return False
         # store session data
-        session_attr["state"] = UserStates.USING_MEETING_SYSTEM.name
+        session_attr["user_state"] = UserStates.USING_MEETING_SYSTEM.name
 
         print(CreateMeetingSystemIntentHandler.TAG + ' matched')
         return True
