@@ -35,7 +35,7 @@ class EntryHandler(AbstractRequestHandler):
         if is_request_type("IntentRequest")(handler_input):
             intent_name = handler_input.request_envelope.request.intent.name
             print(EntryHandler.TAG + ' - intent name: ' + intent_name)
-            if is_intent_name(CreateMeetingSystemIntentHandler.INTENT_NAME)(handler_input):
+            if is_intent_name(CreateMeetingSystemIntent_INTENT_NAME)(handler_input):
                 if is_sesssion_correct(self, handler_input):
                     response_result = doCreateMeetingSystemIntentAction(self, handler_input)
         return response_result
@@ -45,11 +45,11 @@ def is_sesssion_correct(self, handler_input):
     # check session state
     session_attr = handler_input.attributes_manager.session_attributes
     user_states = json.loads(session_attr["user_states"])
-    print(CreateMeetingSystemIntentHandler.TAG + ' - session_attr["user_states"]: ' + session_attr[
+    print(CreateMeetingSystemIntent_TAG + ' - session_attr["user_states"]: ' + session_attr[
         "user_states"])
-    if is_intent_name(CreateMeetingSystemIntentHandler.INTENT_NAME)(handler_input) \
+    if is_intent_name(CreateMeetingSystemIntent_INTENT_NAME)(handler_input) \
             and UserStates.USING_MEETING_SYSTEM.name in user_states:
-        print(CreateMeetingSystemIntentHandler.TAG + ' - meeting system exists already')
+        print(CreateMeetingSystemIntent_TAG + ' - meeting system exists already')
         return False
 
 # LanchRequest
@@ -69,6 +69,7 @@ def doLaunchRequestAction(self, handler_input):
 
 # CreateMeetingSystemIntent
 CreateMeetingSystemIntent_TAG = 'CreateMeetingSystemIntent'
+CreateMeetingSystemIntent_INTENT_NAME = 'CreateMeetingSystemIntent'
 def doCreateMeetingSystemIntentAction(self, handler_input):
     # type: (HandlerInput) -> Response
     # store session data
