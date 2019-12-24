@@ -13,7 +13,7 @@ import json
 from .utils import session_util
 from .helpers import LaunchRequestHelper
 from .helpers import CreateMeetingSystemIntentHelper
-from .helpers import BookMeetingIntentHelper
+from .helpers.BookMeetingIntentHelper import BookMeetingIntentHelper
 from .helpers import CancelIntentHelper
 from .helpers import StopIntentHelper
 from .helpers import SessionEndedRequestHelper
@@ -38,7 +38,7 @@ class EntryHandler(AbstractRequestHandler):
             intent_name = handler_input.request_envelope.request.intent.name
             print(EntryHandler.TAG + ' - intent name: ' + intent_name)
             # check session
-            if session_util.is_sesssion_correct(handler_input, intent_name):
+            if session_util.is_sesssion_correct(handler_input):
                 # check intent name
                 if is_intent_name(CreateMeetingSystemIntentHelper.INTENT_NAME)(handler_input):
                     response_result = CreateMeetingSystemIntentHelper.execute(handler_input)
