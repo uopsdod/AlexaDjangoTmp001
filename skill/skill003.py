@@ -1,7 +1,4 @@
 from ask_sdk_core.skill_builder import SkillBuilder
-
-sb = SkillBuilder()
-
 from ask_sdk_core.dispatch_components import AbstractRequestHandler
 from ask_sdk_core.utils import is_request_type, is_intent_name
 from ask_sdk_core.handler_input import HandlerInput
@@ -10,14 +7,13 @@ from ask_sdk_model.ui import SimpleCard
 
 import json
 
-from .utils import session_util
 from .helpers import LaunchRequestHelper
 from .helpers import CreateMeetingSystemIntentHelper
 from .helpers.BookMeetingIntentHelper import BookMeetingIntentHelper
 from .helpers import CancelIntentHelper
 from .helpers import StopIntentHelper
 from .helpers import SessionEndedRequestHelper
-
+from .utils.common_util import UserStates
 
 class EntryHandler(AbstractRequestHandler):
     TAG = 'EntryHandler'
@@ -38,7 +34,7 @@ class EntryHandler(AbstractRequestHandler):
             intent_name = handler_input.request_envelope.request.intent.name
             print(EntryHandler.TAG + ' - intent name: ' + intent_name)
             # check session
-            if session_util.is_sesssion_correct(handler_input):
+            if is_user_state_correct(handler_input):
                 # check intent name
                 if is_intent_name(CreateMeetingSystemIntentHelper.INTENT_NAME)(handler_input):
                     response_result = CreateMeetingSystemIntentHelper.execute(handler_input)
@@ -52,7 +48,21 @@ class EntryHandler(AbstractRequestHandler):
             response_result = SessionEndedRequestHelper.execute(handler_input)
         return response_result
 
+# to check user state
+def is_user_state_correct(handler_input):
+   # check session state
+   session_attr = handler_input.attributes_manager.session_attributes
+   user_states = json.loads(session_attr["user_states"])
+   print('is_user_state_correct' + ' - session_attr["user_states"]: ' + session_attr[
+      "user_states"])
+   if is_intent_name(CreateMeetingSystemIntentHelper.INTENT_NAME)(handler_input) \
+           and UserStates.USING_MEETING_SYSTEM.name in user_states:
+      print('is_user_state_correct' + ' - meeting system exists already')
+      return False
+   return True
+
+# create Skill
+sb = SkillBuilder()
 # register entry handler
 sb.add_request_handler(EntryHandler())
-
 myskill003 = sb.create()
