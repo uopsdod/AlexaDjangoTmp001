@@ -4,6 +4,8 @@ from ..utils.common_util import UserStates
 class LaunchRequestHelper():
     # LanchRequest
     TAG = 'LaunchRequest'
+
+    @staticmethod
     def execute(self, handler_input):
         # type: (HandlerInput) -> Response
         # initialize session state
