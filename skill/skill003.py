@@ -8,15 +8,13 @@ from ask_sdk_core.handler_input import HandlerInput
 from ask_sdk_model import Response
 from ask_sdk_model.ui import SimpleCard
 
-import enum
 import json
+
+from .utils.common_util import UserStates
+from .helpers import LaunchRequestHelper
 
 #TODO: BookMeetingIntentHandler - create slot to get Monday - Sunday
 #TODO: BookMeetingIntentHandler - use slot to get Monday - Sunday
-
-class UserStates(enum.Enum):
-   INIT = 0
-   USING_MEETING_SYSTEM = 1
 
 class EntryHandler(AbstractRequestHandler):
     TAG = 'EntryHandler'
@@ -31,7 +29,7 @@ class EntryHandler(AbstractRequestHandler):
         print(EntryHandler.TAG + ' - request type: ' + request_type)
         # check request type
         if is_request_type("LaunchRequest")(handler_input):
-            response_result = doLaunchRequestAction(self, handler_input)
+            response_result = LaunchRequestHelper.execute(self, handler_input)
         if is_request_type("IntentRequest")(handler_input):
             intent_name = handler_input.request_envelope.request.intent.name
             print(EntryHandler.TAG + ' - intent name: ' + intent_name)
@@ -43,7 +41,7 @@ class EntryHandler(AbstractRequestHandler):
 
         return response_result
 
-# General
+# General # TODO: refactor this
 def is_sesssion_correct(self, handler_input):
     # check session state
     session_attr = handler_input.attributes_manager.session_attributes
@@ -56,19 +54,6 @@ def is_sesssion_correct(self, handler_input):
         return False
     return True
 
-# LanchRequest
-LaunchRequest_TAG = 'LaunchRequest'
-def doLaunchRequestAction(self, handler_input):
-    # type: (HandlerInput) -> Response
-    # initialize session state
-    session_attr = handler_input.attributes_manager.session_attributes
-    user_states = []
-    user_states.append(UserStates.INIT.name)
-    session_attr["user_states"] = json.dumps(user_states)
-    print(LaunchRequest_TAG + ' - user_states:' + session_attr["user_states"])
-    # build response
-    speech_text = "Version one, do you want to create a new meeting system or use an existing one?"
-    return handler_input.response_builder.speak(speech_text).set_should_end_session(False).response
 
 # CreateMeetingSystemIntent
 CreateMeetingSystemIntent_TAG = 'CreateMeetingSystemIntent'
