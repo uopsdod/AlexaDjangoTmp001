@@ -28,7 +28,7 @@ class EntryHandler(AbstractRequestHandler):
         request_type = handler_input.request_envelope.request.object_type
         print(EntryHandler.TAG + ' - request type: ' + request_type)
         # check request type
-        if response_result == "LaunchRequest":
+        if request_type == "LaunchRequest":
             response_result = LaunchRequestHelper.execute(handler_input)
         if is_request_type("IntentRequest")(handler_input):
             intent_name = handler_input.request_envelope.request.intent.name
