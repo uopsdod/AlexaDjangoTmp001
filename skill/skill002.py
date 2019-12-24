@@ -15,21 +15,28 @@ import json
 #TODO: BookMeetingIntentHandler - use slot to get Monday - Sunday
 
 class States(enum.Enum):
+   INIT = 0
    USING_MEETING_SYSTEM = 1
 
 class LaunchRequestHandler(AbstractRequestHandler):
+    TAG = 'LaunchRequestHandler'
     def can_handle(self, handler_input):
         # type: (HandlerInput) -> bool
         # check request type
-        print('LaunchRequestHandler - request type:' + handler_input.request_envelope.request.object_type)
+        print(LaunchRequestHandler.TAG + ' - request type:' + handler_input.request_envelope.request.object_type)
         if not is_request_type("LaunchRequest")(handler_input):
             return False
 
-        print('LaunchRequestHandler matched')
+        print(LaunchRequestHandler.TAG + ' matched')
         return True
 
     def handle(self, handler_input):
         # type: (HandlerInput) -> Response
+        # update session state
+        session_attr = handler_input.attributes_manager.session_attributes
+        session_attr["state"] = States.INIT
+        print(LaunchRequestHandler.TAG + ' - session_attr["state"]:' + session_attr["state"])
+
         speech_text = "Version one, do you want to create a new meeting system or use an existing one?"
         handler_input.response_builder.speak(speech_text).set_should_end_session(False)
         return handler_input.response_builder.response
@@ -49,6 +56,7 @@ class CreateMeetingSystemIntentHandler(AbstractRequestHandler):
             return False
         # check session state
         session_attr = handler_input.attributes_manager.session_attributes
+        print(CreateMeetingSystemIntentHandler.TAG + ' - session_attr["state"]: ' + session_attr["state"])
         if session_attr["state"] == States.USING_MEETING_SYSTEM: # TODO: change this to list
             print(CreateMeetingSystemIntentHandler.TAG + ' - meeting system exists already')
             return False
