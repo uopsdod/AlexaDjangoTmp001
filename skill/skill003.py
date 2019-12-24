@@ -18,6 +18,37 @@ class UserStates(enum.Enum):
    INIT = 0
    USING_MEETING_SYSTEM = 1
 
+class EntryHandler(AbstractRequestHandler):
+    TAG = 'EntryHandler'
+    def can_handle(self, handler_input):
+        print(EntryHandler.TAG + ' matched')
+        return True
+
+    def handle(self, handler_input):
+        response_result = handler_input.response_builder.speak("no handler found").set_should_end_session(True)
+        # retrieve common attributes
+        request_type = handler_input.request_envelope.request.object_type
+        print(EntryHandler.TAG + ' - request type: ' + request_type)
+        # check request type
+        if is_request_type("LaunchRequest")(handler_input):
+            response_result = doLaunchRequestAction(self, handler_input)
+
+        return response_result
+
+
+def doLaunchRequestAction(self, handler_input):
+    # type: (HandlerInput) -> Response
+    # initialize session state
+    session_attr = handler_input.attributes_manager.session_attributes
+    user_states = []
+    user_states.append(UserStates.INIT.name)
+    session_attr["user_states"] = json.dumps(user_states)
+    print(LaunchRequestHandler.TAG + ' - user_states:' + session_attr["user_states"])
+
+    speech_text = "Version one, do you want to create a new meeting system or use an existing one?"
+    handler_input.response_builder.speak(speech_text).set_should_end_session(False)
+    return handler_input.response_builder.response
+
 class LaunchRequestHandler(AbstractRequestHandler):
     TAG = 'LaunchRequestHandler'
     def can_handle(self, handler_input):
@@ -181,19 +212,21 @@ class AllExceptionHandler(AbstractExceptionHandler):
         handler_input.response_builder.speak(speech).ask(speech)
         return handler_input.response_builder.response
 
+# register entry handler
+sb.add_request_handler(EntryHandler())
 
 # register request handlers
-sb.add_request_handler(LaunchRequestHandler())
+# sb.add_request_handler(LaunchRequestHandler())
 # sb.add_request_handler(HelloWorldIntentHandler())
-sb.add_request_handler(HelpIntentHandler())
-sb.add_request_handler(CancelAndStopIntentHandler())
-sb.add_request_handler(SessionEndedRequestHandler())
+# sb.add_request_handler(HelpIntentHandler())
+# sb.add_request_handler(CancelAndStopIntentHandler())
+# sb.add_request_handler(SessionEndedRequestHandler())
 
 # register intent handlers
-sb.add_request_handler(CreateMeetingSystemIntentHandler())
-sb.add_request_handler(BookMeetingIntentHandler())
+# sb.add_request_handler(CreateMeetingSystemIntentHandler())
+# sb.add_request_handler(BookMeetingIntentHandler())
 
 # register exception handlers
-sb.add_exception_handler(AllExceptionHandler())
+# sb.add_exception_handler(AllExceptionHandler())
 
 myskill003 = sb.create()
