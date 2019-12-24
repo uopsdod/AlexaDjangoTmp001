@@ -8,9 +8,14 @@ from ask_sdk_core.handler_input import HandlerInput
 from ask_sdk_model import Response
 from ask_sdk_model.ui import SimpleCard
 
+import enum
+
 import json
 #TODO: BookMeetingIntentHandler - create slot to get Monday - Sunday
 #TODO: BookMeetingIntentHandler - use slot to get Monday - Sunday
+
+class States(enum.Enum):
+   USING_MEETING_SYSTEM = 1
 
 class LaunchRequestHandler(AbstractRequestHandler):
     def can_handle(self, handler_input):
@@ -30,19 +35,27 @@ class LaunchRequestHandler(AbstractRequestHandler):
         return handler_input.response_builder.response
 
 class CreateMeetingSystemIntentHandler(AbstractRequestHandler):
-
+    TAG = 'CreateMeetingSystemIntentHandler'
+    INTENT_NAME = 'CreateMeetingSystemIntent'
     def can_handle(self, handler_input):
         # type: (HandlerInput) -> bool
         # check request type
-        print('CreateMeetingSystemIntentHandler - request type: ' + handler_input.request_envelope.request.object_type)
+        print(CreateMeetingSystemIntentHandler.TAG + ' - request type: ' + handler_input.request_envelope.request.object_type)
         if not is_request_type("IntentRequest")(handler_input):
             return False
         # check intent name
-        print('CreateMeetingSystemIntentHandler - intent name: ' + handler_input.request_envelope.request.intent.name)
-        if not is_intent_name("CreateMeetingSystemIntent")(handler_input):
+        print(CreateMeetingSystemIntentHandler.TAG + ' - intent name: ' + handler_input.request_envelope.request.intent.name)
+        if not is_intent_name(CreateMeetingSystemIntentHandler.INTENT_NAME)(handler_input):
             return False
+        # check session state
+        session_attr = handler_input.attributes_manager.session_attributes
+        if session_attr["state"] == States.USING_MEETING_SYSTEM: # TODO: change this to list
+            print(CreateMeetingSystemIntentHandler.TAG + ' - meeting system exists already')
+            return False
+        # store session data
+        session_attr["state"] = States.USING_MEETING_SYSTEM
 
-        print('CreateMeetingSystemIntent matched')
+        print(CreateMeetingSystemIntentHandler.TAG + ' matched')
         return True
 
     def handle(self, handler_input):
