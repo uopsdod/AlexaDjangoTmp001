@@ -8,7 +8,7 @@ def is_sesssion_correct(handler_input, now_intent_name):
    user_states = json.loads(session_attr["user_states"])
    print('is_sesssion_correct' + ' - session_attr["user_states"]: ' + session_attr[
       "user_states"])
-   if is_intent_name(now_intent_name)(handler_input) \
+   if is_intent_name(UserStates.USING_MEETING_SYSTEM.name)(handler_input) \
            and UserStates.USING_MEETING_SYSTEM.name in user_states:
       print('is_sesssion_correct' + ' - meeting system exists already')
       return False
