@@ -17,15 +17,18 @@ from django.contrib import admin
 from django.urls import include, path
 from skill.skill001 import myskill001
 from skill.skill002 import myskill002
+from skill.skill003 import myskill003
 
 from django_ask_sdk.skill_adapter import SkillAdapter
 
 my_skill_view = SkillAdapter.as_view(skill=myskill001)
 my_skill_view2 = SkillAdapter.as_view(skill=myskill002)
+my_skill_view3 = SkillAdapter.as_view(skill=myskill003)
 
 urlpatterns = [
     path('skillentry/', my_skill_view, name='index'),
     path('skillentry2/', my_skill_view2, name='index2'),
+    path('skillentry3/', my_skill_view3, name='index3'),
     path('polls/', include('polls.urls')),
     path('admin/', admin.site.urls),
 ]
