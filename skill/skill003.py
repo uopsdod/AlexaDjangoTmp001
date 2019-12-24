@@ -29,7 +29,7 @@ class EntryHandler(AbstractRequestHandler):
         print(EntryHandler.TAG + ' - request type: ' + request_type)
         # check request type
         if is_request_type("LaunchRequest")(handler_input):
-            response_result = LaunchRequestHelper.execute(self, handler_input)
+            response_result = LaunchRequestHelper.execute(handler_input)
         if is_request_type("IntentRequest")(handler_input):
             intent_name = handler_input.request_envelope.request.intent.name
             print(EntryHandler.TAG + ' - intent name: ' + intent_name)

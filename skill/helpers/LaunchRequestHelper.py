@@ -1,12 +1,12 @@
 import json
 from ..utils.common_util import UserStates
 
-class LaunchRequestHelper():
+class LaunchRequestHelper(object):
     # LanchRequest
     TAG = 'LaunchRequest'
 
     @staticmethod
-    def execute(self, handler_input):
+    def execute(handler_input):
         # type: (HandlerInput) -> Response
         # initialize session state
         session_attr = handler_input.attributes_manager.session_attributes
