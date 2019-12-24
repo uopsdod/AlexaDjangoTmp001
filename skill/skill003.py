@@ -43,7 +43,7 @@ class EntryHandler(AbstractRequestHandler):
                 if is_intent_name(CreateMeetingSystemIntentHelper.INTENT_NAME)(handler_input):
                     response_result = CreateMeetingSystemIntentHelper.execute(handler_input)
                 if is_intent_name(BookMeetingIntentHelper.INTENT_NAME)(handler_input):
-                    response_result = BookMeetingIntentHelper().execute(self, handler_input)
+                    response_result = BookMeetingIntentHelper().execute(handler_input)
                 if is_intent_name("AMAZON.CancelIntent")(handler_input):
                     response_result = CancelIntentHelper.execute(handler_input)
                 if is_intent_name("AMAZON.StopIntent")(handler_input):
