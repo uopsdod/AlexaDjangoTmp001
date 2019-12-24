@@ -10,7 +10,7 @@ from ask_sdk_model.ui import SimpleCard
 
 import json
 
-from .utils.common_util import UserStates
+from .utils import session_util
 from .helpers import LaunchRequestHelper
 from .helpers import CreateMeetingSystemIntentHelper
 from .helpers import BookMeetingIntentHelper
@@ -38,7 +38,7 @@ class EntryHandler(AbstractRequestHandler):
             intent_name = handler_input.request_envelope.request.intent.name
             print(EntryHandler.TAG + ' - intent name: ' + intent_name)
             # check session
-            if is_sesssion_correct(handler_input):
+            if session_util.is_sesssion_correct(handler_input, intent_name):
                 # check intent name
                 if is_intent_name(CreateMeetingSystemIntentHelper.INTENT_NAME)(handler_input):
                     response_result = CreateMeetingSystemIntentHelper.execute(handler_input)
@@ -51,19 +51,6 @@ class EntryHandler(AbstractRequestHandler):
         if is_request_type("SessionEndedRequest")(handler_input):
             response_result = SessionEndedRequestHelper.execute(handler_input)
         return response_result
-
-# General
-def is_sesssion_correct(handler_input):
-    # check session state
-    session_attr = handler_input.attributes_manager.session_attributes
-    user_states = json.loads(session_attr["user_states"])
-    print('is_sesssion_correct' + ' - session_attr["user_states"]: ' + session_attr[
-        "user_states"])
-    if is_intent_name(CreateMeetingSystemIntentHelper.INTENT_NAME)(handler_input) \
-            and UserStates.USING_MEETING_SYSTEM.name in user_states:
-        print(CreateMeetingSystemIntentHelper.TAG + ' - meeting system exists already')
-        return False
-    return True
 
 # register entry handler
 sb.add_request_handler(EntryHandler())
