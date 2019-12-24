@@ -32,10 +32,28 @@ class EntryHandler(AbstractRequestHandler):
         # check request type
         if is_request_type("LaunchRequest")(handler_input):
             response_result = doLaunchRequestAction(self, handler_input)
-
+        if is_request_type("IntentRequest")(handler_input):
+            intent_name = handler_input.request_envelope.request.intent.name
+            print(EntryHandler.TAG + ' - intent name: ' + intent_name)
+            if is_intent_name(CreateMeetingSystemIntentHandler.INTENT_NAME)(handler_input):
+                if is_sesssion_correct(self, handler_input):
+                    response_result = doCreateMeetingSystemIntentAction(self, handler_input)
         return response_result
 
+# General
+def is_sesssion_correct(self, handler_input):
+    # check session state
+    session_attr = handler_input.attributes_manager.session_attributes
+    user_states = json.loads(session_attr["user_states"])
+    print(CreateMeetingSystemIntentHandler.TAG + ' - session_attr["user_states"]: ' + session_attr[
+        "user_states"])
+    if is_intent_name(CreateMeetingSystemIntentHandler.INTENT_NAME)(handler_input) \
+            and UserStates.USING_MEETING_SYSTEM.name in user_states:
+        print(CreateMeetingSystemIntentHandler.TAG + ' - meeting system exists already')
+        return False
 
+# LanchRequest
+LaunchRequest_TAG = 'LaunchRequest'
 def doLaunchRequestAction(self, handler_input):
     # type: (HandlerInput) -> Response
     # initialize session state
@@ -43,69 +61,85 @@ def doLaunchRequestAction(self, handler_input):
     user_states = []
     user_states.append(UserStates.INIT.name)
     session_attr["user_states"] = json.dumps(user_states)
-    print(LaunchRequestHandler.TAG + ' - user_states:' + session_attr["user_states"])
+    print(LaunchRequest_TAG + ' - user_states:' + session_attr["user_states"])
 
     speech_text = "Version one, do you want to create a new meeting system or use an existing one?"
     handler_input.response_builder.speak(speech_text).set_should_end_session(False)
     return handler_input.response_builder.response
 
-class LaunchRequestHandler(AbstractRequestHandler):
-    TAG = 'LaunchRequestHandler'
-    def can_handle(self, handler_input):
-        # type: (HandlerInput) -> bool
-        # check request type
-        print(LaunchRequestHandler.TAG + ' - request type:' + handler_input.request_envelope.request.object_type)
-        if not is_request_type("LaunchRequest")(handler_input):
-            return False
+# CreateMeetingSystemIntent
+CreateMeetingSystemIntent_TAG = 'CreateMeetingSystemIntent'
+def doCreateMeetingSystemIntentAction(self, handler_input):
+    # type: (HandlerInput) -> Response
+    # store session data
+    session_attr = handler_input.attributes_manager.session_attributes
+    user_states = json.loads(session_attr["user_states"])
+    user_states.append(UserStates.USING_MEETING_SYSTEM.name)
+    session_attr["user_states"] = json.dumps(user_states)
+    print(CreateMeetingSystemIntent_TAG + ' - user_states:' + session_attr["user_states"])
 
-        print(LaunchRequestHandler.TAG + ' matched')
-        return True
+    speech_text = "Version one, do you want to create a new meeting system or use an existing one?"
+    handler_input.response_builder.speak(speech_text).set_should_end_session(False)
+    return handler_input.response_builder.response
 
-    def handle(self, handler_input):
-        # type: (HandlerInput) -> Response
-        # initialize session state
-        session_attr = handler_input.attributes_manager.session_attributes
-        user_states = []
-        user_states.append(UserStates.INIT.name)
-        session_attr["user_states"] = json.dumps(user_states)
-        print(LaunchRequestHandler.TAG + ' - user_states:' + session_attr["user_states"])
 
-        speech_text = "Version one, do you want to create a new meeting system or use an existing one?"
-        handler_input.response_builder.speak(speech_text).set_should_end_session(False)
-        return handler_input.response_builder.response
+# class LaunchRequestHandler(AbstractRequestHandler):
+#     TAG = 'LaunchRequestHandler'
+#     def can_handle(self, handler_input):
+#         # type: (HandlerInput) -> bool
+#         # check request type
+#         print(LaunchRequestHandler.TAG + ' - request type:' + handler_input.request_envelope.request.object_type)
+#         if not is_request_type("LaunchRequest")(handler_input):
+#             return False
+#
+#         print(LaunchRequestHandler.TAG + ' matched')
+#         return True
+#
+#     def handle(self, handler_input):
+#         # type: (HandlerInput) -> Response
+#         # initialize session state
+#         session_attr = handler_input.attributes_manager.session_attributes
+#         user_states = []
+#         user_states.append(UserStates.INIT.name)
+#         session_attr["user_states"] = json.dumps(user_states)
+#         print(LaunchRequestHandler.TAG + ' - user_states:' + session_attr["user_states"])
+#
+#         speech_text = "Version one, do you want to create a new meeting system or use an existing one?"
+#         handler_input.response_builder.speak(speech_text).set_should_end_session(False)
+#         return handler_input.response_builder.response
 
-class CreateMeetingSystemIntentHandler(AbstractRequestHandler):
-    TAG = 'CreateMeetingSystemIntentHandler'
-    INTENT_NAME = 'CreateMeetingSystemIntent'
-    def can_handle(self, handler_input):
-        # type: (HandlerInput) -> bool
-        # check request type
-        print(CreateMeetingSystemIntentHandler.TAG + ' - request type: ' + handler_input.request_envelope.request.object_type)
-        if not is_request_type("IntentRequest")(handler_input):
-            return False
-        # check intent name
-        print(CreateMeetingSystemIntentHandler.TAG + ' - intent name: ' + handler_input.request_envelope.request.intent.name)
-        if not is_intent_name(CreateMeetingSystemIntentHandler.INTENT_NAME)(handler_input):
-            return False
-        # check session state
-        session_attr = handler_input.attributes_manager.session_attributes
-        user_states = json.loads(session_attr["user_states"])
-        print(CreateMeetingSystemIntentHandler.TAG + ' - session_attr["user_states"]: ' + session_attr["user_states"])
-        if UserStates.USING_MEETING_SYSTEM.name in user_states:
-            print(CreateMeetingSystemIntentHandler.TAG + ' - meeting system exists already')
-            return False
-        # store session data
-        user_states.append(UserStates.USING_MEETING_SYSTEM.name)
-        session_attr["user_states"] = json.dumps(user_states)
-
-        print(CreateMeetingSystemIntentHandler.TAG + ' matched')
-        return True
-
-    def handle(self, handler_input):
-        speech_text = "OK, I have created a new meeting system for you. "
-        speech_text += "Do you want to book a meeting by day?"
-        handler_input.response_builder.speak(speech_text).set_should_end_session(False)
-        return handler_input.response_builder.response
+# class CreateMeetingSystemIntentHandler(AbstractRequestHandler):
+#     TAG = 'CreateMeetingSystemIntentHandler'
+#     INTENT_NAME = 'CreateMeetingSystemIntent'
+#     def can_handle(self, handler_input):
+#         # type: (HandlerInput) -> bool
+#         # check request type
+#         print(CreateMeetingSystemIntentHandler.TAG + ' - request type: ' + handler_input.request_envelope.request.object_type)
+#         if not is_request_type("IntentRequest")(handler_input):
+#             return False
+#         # check intent name
+#         print(CreateMeetingSystemIntentHandler.TAG + ' - intent name: ' + handler_input.request_envelope.request.intent.name)
+#         if not is_intent_name(CreateMeetingSystemIntentHandler.INTENT_NAME)(handler_input):
+#             return False
+#         # check session state
+#         session_attr = handler_input.attributes_manager.session_attributes
+#         user_states = json.loads(session_attr["user_states"])
+#         print(CreateMeetingSystemIntentHandler.TAG + ' - session_attr["user_states"]: ' + session_attr["user_states"])
+#         if UserStates.USING_MEETING_SYSTEM.name in user_states:
+#             print(CreateMeetingSystemIntentHandler.TAG + ' - meeting system exists already')
+#             return False
+#         # store session data
+#         user_states.append(UserStates.USING_MEETING_SYSTEM.name)
+#         session_attr["user_states"] = json.dumps(user_states)
+#
+#         print(CreateMeetingSystemIntentHandler.TAG + ' matched')
+#         return True
+#
+#     def handle(self, handler_input):
+#         speech_text = "OK, I have created a new meeting system for you. "
+#         speech_text += "Do you want to book a meeting by day?"
+#         handler_input.response_builder.speak(speech_text).set_should_end_session(False)
+#         return handler_input.response_builder.response
 
 
 class BookMeetingIntentHandler(AbstractRequestHandler):
