@@ -82,7 +82,7 @@ def doCreateMeetingSystemIntentAction(self, handler_input):
     # build response
     speech_text = "OK, I have created a new meeting system for you. "
     speech_text += "Do you want to book a meeting by day?"
-    return handler_input.response_builder.speak(speech_text).set_should_end_session(False)
+    return handler_input.response_builder.speak(speech_text).set_should_end_session(False).response
 
 
 # class LaunchRequestHandler(AbstractRequestHandler):
