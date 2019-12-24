@@ -32,16 +32,12 @@ class LaunchRequestHandler(AbstractRequestHandler):
 
     def handle(self, handler_input):
         # type: (HandlerInput) -> Response
-        # update session state
+        # initialize session state
         session_attr = handler_input.attributes_manager.session_attributes
-        session_attr["user_state"] = UserStates.INIT.name
-        print(LaunchRequestHandler.TAG + ' - session_attr["user_state"]:' + session_attr["user_state"])
         user_states = []
         user_states.append(UserStates.INIT.name)
         session_attr["user_states"] = json.dumps(user_states)
-        print(LaunchRequestHandler.TAG + ' - session_attr["user_states"]:' + session_attr["user_states"])
-        user_states_2 = json.loads(session_attr["user_states"])
-        print(LaunchRequestHandler.TAG + ' - len(user_states_2):' + len(user_states_2))
+        print(LaunchRequestHandler.TAG + ' - user_states:' + user_states)
 
         speech_text = "Version one, do you want to create a new meeting system or use an existing one?"
         handler_input.response_builder.speak(speech_text).set_should_end_session(False)
@@ -62,12 +58,13 @@ class CreateMeetingSystemIntentHandler(AbstractRequestHandler):
             return False
         # check session state
         session_attr = handler_input.attributes_manager.session_attributes
-        print(CreateMeetingSystemIntentHandler.TAG + ' - session_attr["user_state"]: ' + session_attr["user_state"])
-        if session_attr["user_state"] == UserStates.USING_MEETING_SYSTEM.name: # TODO: change this to list
+        user_states = json.loads(session_attr["user_states"])
+        print(CreateMeetingSystemIntentHandler.TAG + ' - user_states: ' + user_states)
+        if UserStates.USING_MEETING_SYSTEM.name in user_states:
             print(CreateMeetingSystemIntentHandler.TAG + ' - meeting system exists already')
             return False
         # store session data
-        session_attr["user_state"] = UserStates.USING_MEETING_SYSTEM.name
+        user_states.append(UserStates.USING_MEETING_SYSTEM.name)
 
         print(CreateMeetingSystemIntentHandler.TAG + ' matched')
         return True
