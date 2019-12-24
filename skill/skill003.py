@@ -45,12 +45,13 @@ def is_sesssion_correct(self, handler_input):
     # check session state
     session_attr = handler_input.attributes_manager.session_attributes
     user_states = json.loads(session_attr["user_states"])
-    print(CreateMeetingSystemIntent_TAG + ' - session_attr["user_states"]: ' + session_attr[
+    print('is_sesssion_correct' + ' - session_attr["user_states"]: ' + session_attr[
         "user_states"])
     if is_intent_name(CreateMeetingSystemIntent_INTENT_NAME)(handler_input) \
             and UserStates.USING_MEETING_SYSTEM.name in user_states:
         print(CreateMeetingSystemIntent_TAG + ' - meeting system exists already')
         return False
+    return True
 
 # LanchRequest
 LaunchRequest_TAG = 'LaunchRequest'
