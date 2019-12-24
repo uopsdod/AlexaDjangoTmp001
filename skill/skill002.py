@@ -14,7 +14,7 @@ import json
 #TODO: BookMeetingIntentHandler - create slot to get Monday - Sunday
 #TODO: BookMeetingIntentHandler - use slot to get Monday - Sunday
 
-class States(enum.Enum):
+class UserStates(enum.Enum):
    INIT = 0
    USING_MEETING_SYSTEM = 1
 
@@ -34,7 +34,7 @@ class LaunchRequestHandler(AbstractRequestHandler):
         # type: (HandlerInput) -> Response
         # update session state
         session_attr = handler_input.attributes_manager.session_attributes
-        session_attr["state"] = States.INIT
+        session_attr["state"] = UserStates.INIT.name
         print(LaunchRequestHandler.TAG + ' - session_attr["state"]:' + session_attr["state"])
 
         speech_text = "Version one, do you want to create a new meeting system or use an existing one?"
@@ -57,11 +57,11 @@ class CreateMeetingSystemIntentHandler(AbstractRequestHandler):
         # check session state
         session_attr = handler_input.attributes_manager.session_attributes
         print(CreateMeetingSystemIntentHandler.TAG + ' - session_attr["state"]: ' + session_attr["state"])
-        if session_attr["state"] == States.USING_MEETING_SYSTEM: # TODO: change this to list
+        if session_attr["state"] == UserStates.USING_MEETING_SYSTEM.name: # TODO: change this to list
             print(CreateMeetingSystemIntentHandler.TAG + ' - meeting system exists already')
             return False
         # store session data
-        session_attr["state"] = States.USING_MEETING_SYSTEM
+        session_attr["state"] = UserStates.USING_MEETING_SYSTEM.name
 
         print(CreateMeetingSystemIntentHandler.TAG + ' matched')
         return True
