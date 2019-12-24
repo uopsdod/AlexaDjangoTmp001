@@ -1,7 +1,7 @@
 import json
 from ..utils.common_util import UserStates
 
-# BookMeetingIntent
+# utterance: "cancel"
 TAG = 'AMAZON.CancelIntent'
 INTENT_NAME = 'AMAZON.CancelIntent'
 def execute(handler_input):

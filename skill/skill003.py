@@ -60,8 +60,7 @@ def is_user_state_correct(user_states_json, intent_name):
             return False
    return True
 
-# create Skill
+# build Skill with handlers
 sb = SkillBuilder()
-# register handler
 sb.add_request_handler(EntryHandler())
 myskill003 = sb.create()

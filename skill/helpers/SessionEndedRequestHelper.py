@@ -1,7 +1,7 @@
 import json
 from ..utils.common_util import UserStates
 
-# BookMeetingIntent
+# utterance: "exit", "quit"
 TAG = 'SessionEndedRequest'
 def execute(handler_input):
     print(TAG + ' - clean up resources')
