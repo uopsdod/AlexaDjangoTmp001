@@ -25,6 +25,7 @@ class EntryHandler(AbstractRequestHandler):
         # build default response
         response_result = handler_input.response_builder.speak("I don't understand that. ").set_should_end_session(False).response
         # retrieve common attributes
+        session_attr = handler_input.attributes_manager.session_attributes
         request_type = handler_input.request_envelope.request.object_type
         print(EntryHandler.TAG + ' - request type: ' + request_type)
         # check request type
@@ -34,7 +35,7 @@ class EntryHandler(AbstractRequestHandler):
             intent_name = handler_input.request_envelope.request.intent.name
             print(EntryHandler.TAG + ' - intent name: ' + intent_name)
             # check session
-            if is_user_state_correct(handler_input):
+            if is_user_state_correct(session_attr["user_states"], intent_name):
                 # check intent name
                 if intent_name == CreateMeetingSystemIntentHelper.INTENT_NAME:
                     response_result = CreateMeetingSystemIntentHelper.execute(handler_input)
@@ -49,20 +50,18 @@ class EntryHandler(AbstractRequestHandler):
         return response_result
 
 # to check user state
-def is_user_state_correct(handler_input):
-   # check session state
-   session_attr = handler_input.attributes_manager.session_attributes
-   user_states = json.loads(session_attr["user_states"])
-   print('is_user_state_correct' + ' - session_attr["user_states"]: ' + session_attr[
-      "user_states"])
-   if is_intent_name(CreateMeetingSystemIntentHelper.INTENT_NAME)(handler_input) \
-           and UserStates.USING_MEETING_SYSTEM.name in user_states:
-      print('is_user_state_correct' + ' - meeting system exists already')
-      return False
+def is_user_state_correct(user_states_json, intent_name):
+   print('is_user_state_correct' + ' - user_states: ' + user_states_json)
+   user_states = json.loads(user_states_json)
+
+   if intent_name == CreateMeetingSystemIntentHelper.INTENT_NAME:
+        if UserStates.USING_MEETING_SYSTEM.name in user_states:
+            print('is_user_state_correct' + ' - meeting system exists already')
+            return False
    return True
 
 # create Skill
 sb = SkillBuilder()
-# register entry handler
+# register handler
 sb.add_request_handler(EntryHandler())
 myskill003 = sb.create()
