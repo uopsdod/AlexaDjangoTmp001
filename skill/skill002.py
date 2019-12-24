@@ -37,7 +37,7 @@ class LaunchRequestHandler(AbstractRequestHandler):
         user_states = []
         user_states.append(UserStates.INIT.name)
         session_attr["user_states"] = json.dumps(user_states)
-        print(LaunchRequestHandler.TAG + ' - user_states:' + user_states)
+        print(LaunchRequestHandler.TAG + ' - user_states:' + session_attr["user_states"])
 
         speech_text = "Version one, do you want to create a new meeting system or use an existing one?"
         handler_input.response_builder.speak(speech_text).set_should_end_session(False)
@@ -59,7 +59,7 @@ class CreateMeetingSystemIntentHandler(AbstractRequestHandler):
         # check session state
         session_attr = handler_input.attributes_manager.session_attributes
         user_states = json.loads(session_attr["user_states"])
-        print(CreateMeetingSystemIntentHandler.TAG + ' - user_states: ' + user_states)
+        print(CreateMeetingSystemIntentHandler.TAG + ' - session_attr["user_states"]: ' + session_attr["user_states"])
         if UserStates.USING_MEETING_SYSTEM.name in user_states:
             print(CreateMeetingSystemIntentHandler.TAG + ' - meeting system exists already')
             return False
