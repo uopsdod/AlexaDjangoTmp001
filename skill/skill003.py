@@ -63,10 +63,9 @@ def doLaunchRequestAction(self, handler_input):
     user_states.append(UserStates.INIT.name)
     session_attr["user_states"] = json.dumps(user_states)
     print(LaunchRequest_TAG + ' - user_states:' + session_attr["user_states"])
-
+    # build response
     speech_text = "Version one, do you want to create a new meeting system or use an existing one?"
-    handler_input.response_builder.speak(speech_text).set_should_end_session(False)
-    return handler_input.response_builder.response
+    return handler_input.response_builder.speak(speech_text).set_should_end_session(False).response
 
 # CreateMeetingSystemIntent
 CreateMeetingSystemIntent_TAG = 'CreateMeetingSystemIntent'
