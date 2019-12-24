@@ -30,21 +30,21 @@ class EntryHandler(AbstractRequestHandler):
         # check request type
         if request_type == "LaunchRequest":
             response_result = LaunchRequestHelper.execute(handler_input)
-        if is_request_type("IntentRequest")(handler_input):
+        if request_type == "IntentRequest":
             intent_name = handler_input.request_envelope.request.intent.name
             print(EntryHandler.TAG + ' - intent name: ' + intent_name)
             # check session
             if is_user_state_correct(handler_input):
                 # check intent name
-                if is_intent_name(CreateMeetingSystemIntentHelper.INTENT_NAME)(handler_input):
+                if intent_name == CreateMeetingSystemIntentHelper.INTENT_NAME:
                     response_result = CreateMeetingSystemIntentHelper.execute(handler_input)
-                if is_intent_name(BookMeetingIntentHelper.INTENT_NAME)(handler_input):
+                if intent_name == BookMeetingIntentHelper.INTENT_NAME:
                     response_result = BookMeetingIntentHelper().execute(handler_input)
-                if is_intent_name("AMAZON.CancelIntent")(handler_input):
+                if intent_name == "AMAZON.CancelIntent":
                     response_result = CancelIntentHelper.execute(handler_input)
-                if is_intent_name("AMAZON.StopIntent")(handler_input):
+                if intent_name == "AMAZON.StopIntent":
                     response_result = StopIntentHelper.execute(handler_input)
-        if is_request_type("SessionEndedRequest")(handler_input):
+        if request_type == "SessionEndedRequest":
             response_result = SessionEndedRequestHelper.execute(handler_input)
         return response_result
 
